@@ -1,5 +1,6 @@
 var MAX_PAGES = 10;
 var REFRESH_INTERVAL = 60 * 60 * 1000;
+var PORT = 32412;
 
 var hackernews = require('./news-ycombinator');
 var express = require('express');
@@ -59,4 +60,4 @@ app.get('/news/:pageNumber', function(request, response) {
   response.json(item);
 });
 
-app.listen(32412);
+app.listen(PORT);
