@@ -1,0 +1,12 @@
+{
+  "name": "news.ycombinator",
+  "description": "A JSON API to get news from HN!",
+  "version": "0.0.1",
+  "dependencies": {
+    "request": "2.30.x",
+    "cheerio": "0.12.x",
+    "express": "3.4.x",
+    "memory-cache": "0.0.x"
+  }
+}
+
