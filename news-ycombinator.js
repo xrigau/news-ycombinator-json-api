@@ -9,8 +9,6 @@ module.exports.getNews = function(path, callback) {
 }
 
 function getNewsFromUrl(url, callback) {
-  console.log('Executing request: ' + url);
-
   request(url, function (error, response, body) {
     if (error) {
       callback(error, '');

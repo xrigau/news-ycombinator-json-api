@@ -5,14 +5,21 @@ var PORT = 32412;
 var hackernews = require('./news-ycombinator');
 var express = require('express');
 var cache = require('memory-cache');
+var winston = require('winston');
 
+winston.add(winston.transports.File, { filename: 'log.txt' });
+winston.remove(winston.transports.Console);
+winston.info('----------------------------------------------------------');
+winston.info('----------------------------------------------------------');
+winston.info('Starting execution in port: ' + PORT + ' - Refresh interval: ' + REFRESH_INTERVAL + ' - Max pages: ' + MAX_PAGES);
 
 function getNews(callback) {
   var newsList = [];
   function getNewsRecursive(path, currentIteration, limit, callback) {
+    winston.info('Executing request - Path: ' + path);
     hackernews.getNews(path, function(error, json) {
       if (error) {
-      	console.log(error);
+        winston.error(error);
       	callback(error, []);
       	return;
       }
@@ -36,7 +43,7 @@ function getNews(callback) {
 var refresh = function() {
   getNews(function(error, items) {
     cache.put('news', items);
-    console.log('Finished loading - Error: ' + error + ' - array size: ' + items.length); 
+    winston.info('Finished loading - Error: ' + error + ' - array size: ' + items.length); 
   });
 };
 refresh();
@@ -47,11 +54,11 @@ var app = express();
 app.set('json spaces', 0);
 
 app.get('/news/:pageNumber', function(request, response) {
-  console.log(new Date() + ' - Request: ' + request.url + ' - UserAgent: ' + request.headers['user-agent']);
+  winston.info(new Date() + ' - Request: ' + request.url + ' - UserAgent: ' + request.headers['user-agent']);
 
   var page = request.params.pageNumber
   if (page < 0 || cache.get('news') === null || page >= cache.get('news').length) {
-  	console.log('------> Error');
+    winston.error('------> Error');
     response.statusCode = 404;
     return response.send('Error 404: Invalid page number');
   }

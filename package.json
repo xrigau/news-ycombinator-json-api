@@ -6,7 +6,8 @@
     "request": "2.30.x",
     "cheerio": "0.12.x",
     "express": "3.4.x",
-    "memory-cache": "0.0.x"
+    "memory-cache": "0.0.x",
+    "winston": "0.7.x"
   }
 }
 
