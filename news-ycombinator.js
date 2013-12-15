@@ -46,9 +46,9 @@ function getNewsFromUrl(url, callback) {
       var domain = domainMatch == null ? '' : domainMatch[2];
       var title = $(this).find('a').text();
       var link = urlMatcher.test(urlHRef) ? urlHRef : baseUrl + urlHRef;
-      var score = subtextClass.find('span').text();
+      var score = parseInt(subtextClass.find('span').text().split(' ')[0]);
       var user = subtextClass.find('a').first().text();
-      var comments = subtextClass.find('a').last().text();
+      var comments = parseInt(subtextClass.find('a').last().text().split(' ')[0]);
 
       subtextClass.children().each(function(i, elem) {
         $(this).remove();
