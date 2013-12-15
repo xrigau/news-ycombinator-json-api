@@ -42,9 +42,10 @@ function getNewsFromUrl(url, callback) {
       var urlHRef = $(this).find('a').attr('href');
       var subtextClass = $(this).parent().next().find('.subtext');
 
-      var id = idMatcher.exec(subtextClass.find('a').last().attr('href'))[1];
-      var domain = domainMatch == null ? '' : domainMatch[2];
       var title = $(this).find('a').text();
+      var idMatch = idMatcher.exec(subtextClass.find('a').last().attr('href'));
+      var id = idMatch === null ? title : idMatch[1];
+      var domain = domainMatch == null ? '' : domainMatch[2];
       var link = urlMatcher.test(urlHRef) ? urlHRef : baseUrl + urlHRef;
       var score = parseInt(subtextClass.find('span').text().split(' ')[0]);
       var user = subtextClass.find('a').first().text();
