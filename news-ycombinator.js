@@ -76,8 +76,12 @@ function getNewsFromUrl(url, callback) {
     });
 
     var segment = nextPage.find('a').last().attr('href');
-    segment = (segment.indexOf('/') == 0) ? segment.substring(1, segment.length) : segment;
-    json.nextPagePath = segment;
+    try {
+      segment = (segment.indexOf('/') == 0) ? segment.substring(1, segment.length) : segment;
+      json.nextPagePath = segment;
+    } catch (exception) {
+      callback(exception, json);
+    }
 
     callback(null, json);
   });

@@ -19,8 +19,11 @@ function getNews(callback) {
     winston.info('Executing request - Path: ' + path);
     hackernews.getNews(path, function(error, json) {
       if (error) {
-        winston.error(error);
-      	callback(error, []);
+        winston.error("########### FOUND AN ERROR ########");
+        winston.error("Error: " + error);
+        winston.error("Json: " + json);
+        winston.error("###################################");
+        callback(error, json);
       	return;
       }
 
