@@ -23,6 +23,9 @@ function getNewsFromUrl(url, callback) {
       return !isNumber && !isMore;
     });
 
+    var idPattern = /id=(.*)/
+    var idMatcher = new RegExp(idPattern);
+
     var domainPattern = /(\()(.*)(\))/
     var domainMatcher = new RegExp(domainPattern);
 
@@ -37,11 +40,12 @@ function getNewsFromUrl(url, callback) {
     news.each(function() {
       var domainMatch = domainMatcher.exec($(this).find('span.comhead').text());
       var urlHRef = $(this).find('a').attr('href');
+      var subtextClass = $(this).parent().next().find('.subtext');
 
+      var id = idMatcher.exec(subtextClass.find('a').last().attr('href'))[1];
       var domain = domainMatch == null ? '' : domainMatch[2];
       var title = $(this).find('a').text();
       var link = urlMatcher.test(urlHRef) ? urlHRef : baseUrl + urlHRef;
-      var subtextClass = $(this).parent().next().find('.subtext');
       var score = subtextClass.find('span').text();
       var user = subtextClass.find('a').first().text();
       var comments = subtextClass.find('a').last().text();
@@ -52,6 +56,7 @@ function getNewsFromUrl(url, callback) {
       var timestamp = subtextClass.text().replace('by', '').replace('|', '').trim();
 
       var item = {
+        id: id,
         domain: domain,
         title: title,
         link: link,
