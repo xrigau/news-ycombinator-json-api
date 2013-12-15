@@ -1,5 +1,6 @@
 var MAX_PAGES = 10;
-var REFRESH_INTERVAL = 60 * 60 * 1000;
+var REFRESH_INTERVAL_MS = 60 * 60 * 1000; // Reload everything every hour
+var GET_NEXT_PAGE_DELAY_MS = 40 * 1000; // 40 seconds delay seems ok. Total time is around 6.5 minutes https://news.ycombinator.com/item?id=1702399
 var PORT = 32412;
 
 var hackernews = require('./news-ycombinator');
@@ -11,7 +12,7 @@ winston.add(winston.transports.File, { filename: 'log.txt' });
 winston.remove(winston.transports.Console);
 winston.info('----------------------------------------------------------');
 winston.info('----------------------------------------------------------');
-winston.info('Starting execution in port: ' + PORT + ' - Refresh interval: ' + REFRESH_INTERVAL + ' - Max pages: ' + MAX_PAGES);
+winston.info('Starting execution in port: ' + PORT + ' - Refresh interval: ' + REFRESH_INTERVAL_MS + ' - Max pages: ' + MAX_PAGES);
 
 function getNews(callback) {
   var newsList = [];
@@ -30,7 +31,9 @@ function getNews(callback) {
       newsList.push(json);
 
       if (nextIteration < limit) {
-        getNewsRecursive(json.nextPagePath, nextIteration, limit, callback);
+      	setTimeout(function() {
+        	getNewsRecursive(json.nextPagePath, nextIteration, limit, callback);
+      	}, GET_NEXT_PAGE_DELAY_MS);
       } else {
         callback(error, newsList);
       }
@@ -47,7 +50,7 @@ var refresh = function() {
   });
 };
 refresh();
-setInterval(refresh, REFRESH_INTERVAL);
+setInterval(refresh, REFRESH_INTERVAL_MS);
 
 
 var app = express();
